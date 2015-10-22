@@ -1,7 +1,9 @@
 import csv
+import re
 
-import stack as st
+import lib.stack as st
 from lib.ip import *
+from lib.getch import getch
 
 
 def lp(content):
@@ -161,5 +163,29 @@ def execute(prog):
 
                 elif c in ['PRINT']:
                     print(chr(stack.pop()), end='')
+
+                elif c in ['GETCH']:
+                    stack.push(getch())
+
+                elif c in ['']:
+                    pass
+
+                elif c[0] == '\'' and c[-1] == '\'':
+                    stack.push(c[1:-1])
+
+                elif re.compile(r'-?[0-9]+').match(c):
+                    stack.push(int(c))
+
+                elif re.compile(r'-?[0-9]+(\.[0-9]+)?').match(c):
+                    stack.push(float(c))
+
+                elif re.compile(r'-?0x[0-9a-fA-F]+').match(c):
+                    stack.push(int(c, 16))
+
+                elif re.compile(r'-?0o[0-7]+').match(c):
+                    stack.push(int(c, 8))
+
+                elif re.compile(r'0?0b[0-1]+').match(c):
+                    stack.push(int(c, 2))
 
         ip.step()
