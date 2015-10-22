@@ -1,8 +1,7 @@
 import csv
-import re
+
 import stack as st
-from ip import *
-from getch import getch
+from lib.ip import *
 
 
 def lp(content):
