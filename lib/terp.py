@@ -10,21 +10,19 @@ def lp(content):
     return csv.reader(content, delimeter=' ', quotechar='"')
 
 
-def execute(prog):
+def execute(program):
     stacks = [st.stack()]
-    stacki = 0
-    prog = lp(prog)
-    ips = [IP()]
+    stack_i = 0
+    program = lp(program)
+    ips = [IP(0, 0, (1, 0))]
 
     for ip in ips:
-        com = prog[ip.y][ip.x].upper()
+        com = program[::-1][ip.y][ip.x].upper()
 
         if ip.mode == 'main':
-            com = com.split(';')
-            assert com[-1] == ''
-            com = com[:-1]
+            com = [x for x in com.split(';') if x]
             for c in com:
-                stack = stacks[stacki]
+                stack = stacks[stack_i]
                 if c in ['>', 'RIGHT', 'EAST']:
                     ip.delta = (1, 0)
 
@@ -166,6 +164,9 @@ def execute(prog):
 
                 elif c in ['GETCH']:
                     stack.push(getch())
+
+                elif c in []:
+                    pass
 
                 elif c in ['']:
                     pass
