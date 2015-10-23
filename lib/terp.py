@@ -7,7 +7,8 @@ from lib.getch import getch
 
 
 def lp(content):
-    return csv.reader(content, delimeter=' ', quotechar='"')
+    r = [row for row in csv.reader(content, delimiter=' ', quotechar='"')]
+    return r
 
 
 def execute(program):
@@ -16,177 +17,189 @@ def execute(program):
     program = lp(program)
     ips = [IP(0, 0, (1, 0))]
 
-    for ip in ips:
-        com = program[::-1][ip.y][ip.x].upper()
+    while len(ips) > 0:
+        for ipi in range(len(ips)):
+            ip = ips[ipi]
+            com = program[::-1][ip.y][ip.x]
 
-        if ip.mode == 'main':
-            com = [x for x in com.split(';') if x]
-            for c in com:
-                stack = stacks[stack_i]
-                if c in ['>', 'RIGHT', 'EAST']:
-                    ip.delta = (1, 0)
-
-                elif c in ['<', 'LEFT', 'WEST']:
-                    ip.delta = (-1, 0)
-
-                elif c in ['^', 'UP', 'NORTH']:
-                    c.delta = (0, 1)
-
-                elif c in ['v', 'V', 'DOWN', 'SOUTH']:
-                    ip.delta = (0, -1)
-
-                elif com in ['+', 'ADD']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b+a)
-
-                elif c in ['-', 'SUB', 'SUBTRACT']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b-a)
-
-                elif c in ['*', 'MUL', 'MULT', 'MULTIPLY']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b*a)
-
-                elif c in ['/', 'DIV', 'DIVIDE']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b/a)
-
-                elif c in ['%', 'MOD', 'MODULO']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b % a)
-
-                elif c in ['**', 'EXP', 'EXPONENT']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b**a)
-
-                elif c in ['==', 'EQ']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b == a)
-
-                elif c in ['!=', 'NEQ']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b != a)
-
-                elif c in ['GT']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b > a)
-
-                elif c in ['LT']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b < a)
-
-                elif c in ['>=', 'GTE']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b >= a)
-
-                elif c in ['&', 'BAND']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b & a)
-
-                elif c in ['|', 'BOR']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b | a)
-
-                elif c in ['BXOR']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b ^ a)
-
-                elif c in ['~', '1COMP']:
-                    stack.push(~stack.pop())
-
-                elif c in ['>>', 'LS']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b >> a)
-
-                elif c in ['<<', 'RS']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b << a)
-
-                elif c in ['AND']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b and a)
-
-                elif c in ['OR']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(b or a)
-
-                elif c in ['!', 'NOT']:
-                    stack.push(not stack.pop())
-
-                elif c in ['_', 'EWIF']:
-                    a = stack.pop()
-                    if a == 0:
+            if ip.mode == 'main':
+                com = [x for x in com.split(';') if x]
+                for c in com:
+                    cu = c.upper()
+                    stack = stacks[stack_i]
+                    if cu in ['>', 'RIGHT', 'EAST']:
                         ip.delta = (1, 0)
-                    else:
+
+                    elif cu in ['<', 'LEFT', 'WEST']:
                         ip.delta = (-1, 0)
 
-                elif c in ['|', 'NSIF']:
-                    a = stack.pop()
-                    if a == 0:
+                    elif cu in ['^', 'UP', 'NORTH']:
                         ip.delta = (0, 1)
-                    else:
+
+                    elif cu in ['v', 'V', 'DOWN', 'SOUTH']:
                         ip.delta = (0, -1)
 
-                elif c in [':', 'DUP']:
-                    a = stack.pop()
-                    stack.push(a)
-                    stack.push(a)
+                    elif cu in ['+', 'ADD']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b+a)
 
-                elif c in ['\\', 'SWAP']:
-                    a = stack.pop()
-                    b = stack.pop()
-                    stack.push(a)
-                    stack.push(b)
+                    elif cu in ['-', 'SUB', 'SUBTRACT']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b-a)
 
-                elif c in ['$', 'DROP']:
-                    stack.pop()
+                    elif cu in ['*', 'MUL', 'MULT', 'MULTIPLY']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b*a)
 
-                elif c in ['PRINT']:
-                    print(chr(stack.pop()), end='')
+                    elif cu in ['/', 'DIV', 'DIVIDE']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b/a)
 
-                elif c in ['GETCH']:
-                    stack.push(getch())
+                    elif cu in ['%', 'MOD', 'MODULO']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b % a)
 
-                elif c in []:
-                    pass
+                    elif cu in ['**', 'EXP', 'EXPONENT']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b**a)
 
-                elif c in ['']:
-                    pass
+                    elif cu in ['==', 'EQ']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b == a)
 
-                elif c[0] == '\'' and c[-1] == '\'':
-                    stack.push(c[1:-1])
+                    elif cu in ['!=', 'NEQ']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b != a)
 
-                elif re.compile(r'-?[0-9]+').match(c):
-                    stack.push(int(c))
+                    elif cu in ['GT']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b > a)
 
-                elif re.compile(r'-?[0-9]+(\.[0-9]+)?').match(c):
-                    stack.push(float(c))
+                    elif cu in ['LT']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b < a)
 
-                elif re.compile(r'-?0x[0-9a-fA-F]+').match(c):
-                    stack.push(int(c, 16))
+                    elif cu in ['>=', 'GTE']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b >= a)
 
-                elif re.compile(r'-?0o[0-7]+').match(c):
-                    stack.push(int(c, 8))
+                    elif cu in ['&', 'BAND']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b & a)
 
-                elif re.compile(r'0?0b[0-1]+').match(c):
-                    stack.push(int(c, 2))
+                    elif cu in ['|', 'BOR']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b | a)
 
-        ip.step()
+                    elif cu in ['BXOR']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b ^ a)
+
+                    elif cu in ['~', '1COMP']:
+                        stack.push(~stack.pop())
+
+                    elif cu in ['>>', 'LS']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b >> a)
+
+                    elif cu in ['<<', 'RS']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b << a)
+
+                    elif cu in ['AND']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b and a)
+
+                    elif cu in ['OR']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(b or a)
+
+                    elif cu in ['!', 'NOT']:
+                        stack.push(not stack.pop())
+
+                    elif cu in ['_', 'EWIF']:
+                        a = stack.pop()
+                        if a == 0:
+                            ip.delta = (1, 0)
+                        else:
+                            ip.delta = (-1, 0)
+
+                    elif cu in ['|', 'NSIF']:
+                        a = stack.pop()
+                        if a == 0:
+                            ip.delta = (0, 1)
+                        else:
+                            ip.delta = (0, -1)
+
+                    elif cu in [':', 'DUP']:
+                        a = stack.pop()
+                        stack.push(a)
+                        stack.push(a)
+
+                    elif cu in ['\\', 'SWAP']:
+                        a = stack.pop()
+                        b = stack.pop()
+                        stack.push(a)
+                        stack.push(b)
+
+                    elif cu in ['$', 'DROP']:
+                        stack.pop()
+
+                    elif cu in ['PRINT']:
+                        toprint = stack.pop()
+                        if type(toprint) == str:
+                            print(toprint)
+                        elif type(toprint) == int:
+                            print(chr(toprint), end='')
+
+                    elif cu in ['GETCH']:
+                        stack.push(getch())
+
+                    elif cu in ['EXIT']:
+                        del ips[ipi]
+
+                    elif cu in ['']:
+                        print('Invalid command!')
+
+                    elif cu[0] == '\'' and c[-1] == '\'':
+                        stack.push(c[1:-1])
+
+                    elif re.compile(r'-?[0-9]+').match(c):
+                        stack.push(int(c))
+
+                    elif re.compile(r'-?[0-9]+(\.[0-9]+)?').match(c):
+                        stack.push(float(c))
+
+                    elif re.compile(r'-?0x[0-9a-fA-F]+').match(c):
+                        stack.push(int(c, 16))
+
+                    elif re.compile(r'-?0o[0-7]+').match(c):
+                        stack.push(int(c, 8))
+
+                    elif re.compile(r'0?0b[0-1]+').match(c):
+                        stack.push(int(c, 2))
+            ip.step()
+
+
+def execf(f):
+    execute(open(f, newline=''))
+
+execf('test.pf')
