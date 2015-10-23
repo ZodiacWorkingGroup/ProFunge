@@ -102,7 +102,7 @@ def execute(prog):
                     b = stack.pop()
                     stack.push(b | a)
 
-                elif c in ['^', 'BXOR']:
+                elif c in ['BXOR']:
                     a = stack.pop()
                     b = stack.pop()
                     stack.push(b ^ a)
